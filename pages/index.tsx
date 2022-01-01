@@ -3,9 +3,19 @@ import Head from 'next/head'
 import Image from 'next/image'
 
 
+
 const Home: NextPage = () => {
   return (
-    <div className='text-2xl text-red-200'>hello world</div>
+    <div className='h-screen w-screen flex flex-col justify-center items-center align-middle'>
+      <div className="text-2xl text-center">which is rounder?</div>
+      <div className='p-2'></div>
+      <div className="border rounded-lg flex justify-between p-8 max-w-2xl items-center">
+        <div className='w-16 h-16 bg-red-200'></div>
+        <div className='p-8 items-center'>vs</div>
+        <div className='w-16 h-16 bg-red-200'></div>
+      
+      </div>
+    </div>
   )}
 
 export default Home
