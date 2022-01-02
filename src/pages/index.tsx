@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
-import { trpc } from '@/utils/trpc'
+import { inferQueryResponse, trpc } from '@/utils/trpc'
 import Head from 'next/head'
 import Image from 'next/image'
 import { getOptionsForVote } from '@/utils/getRandomPokemon'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 
 
@@ -28,30 +28,32 @@ const Home: NextPage = () => {
       <div className="text-2xl text-center">which is rounder?</div>
       <div className='p-2'></div>
       <div className="border rounded-lg flex justify-between p-8 max-w-2xl items-center">
-        <div className='w-64 h-64 flex flex-col'>
-          <img 
-          src={firstPokemon.data?.sprites.front_default}
-          className='w-full'
-          />
-          <div className='text-xl text-center capitalize mt-[-2rem]' >
-            {firstPokemon.data?.name}
-            
-            </div>
-            <button onClick={() => voteForRoundest(first)}>Rounder</button>
-          </div>
+        {!firstPokemon.isLoading && !secondPokemon.isLoading && firstPokemon.data && secondPokemon.data && (
+          <>
+          <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest(first)}/>
         <div className='p-8 items-center'>vs</div>
-        <div className='w-64 h-64 flex flex-col'>
-        <img 
-        src={secondPokemon.data?.sprites.front_default}
-        className='w-full'
-        /><div className='text-xl text-center capitalize mt-[-2rem]'>
-        {secondPokemon.data?.name}
+        <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest(second)}/>
+          </>
+        )}
         
-        </div>
-        <button onClick={() => voteForRoundest(second)}>Rounder</button></div>
-      
       </div>
     </div>
   )}
+
+type PokemonFromServer = inferQueryResponse<"get-pokemon-by-id">
+
+const PokemonListing: React.FC<{pokemon: PokemonFromServer, vote: () => void}> = (props) => {
+  return (<div className='w-64 h-64 flex flex-col'>
+  <img 
+  src={props.pokemon.sprites.front_default}
+  className='w-full'
+  />
+  <div className='text-xl text-center capitalize mt-[-2rem]' >
+    {props.pokemon.name}
+    
+    </div>
+    <button onClick={() => props.vote()}>Rounder</button>
+  </div>)
+}
 
 export default Home
