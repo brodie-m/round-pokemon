@@ -12,10 +12,17 @@ const Home: NextPage = () => {
   
   
 
-  const [ids,setIds] = useState(getOptionsForVote())
-  const firstPokemon = trpc.useQuery(["get-pokemon-by-id",{id: ids[0]}])
-  const secondPokemon = trpc.useQuery(["get-pokemon-by-id",{id: ids[1]}])
+  const [ids,setIds] = useState(() => getOptionsForVote())
+  const [first,second] = ids
+  const firstPokemon = trpc.useQuery(["get-pokemon-by-id",{id: first}])
+  const secondPokemon = trpc.useQuery(["get-pokemon-by-id",{id:second}])
   if (firstPokemon.isLoading || secondPokemon.isLoading) return null;
+  
+  const voteForRoundest = (selected: number) => {
+    setIds(getOptionsForVote())
+  }
+  
+  
   return (
     <div className='h-screen w-screen flex flex-col justify-center items-center align-middle'>
       <div className="text-2xl text-center">which is rounder?</div>
@@ -30,6 +37,7 @@ const Home: NextPage = () => {
             {firstPokemon.data?.name}
             
             </div>
+            <button onClick={() => voteForRoundest(first)}>Rounder</button>
           </div>
         <div className='p-8 items-center'>vs</div>
         <div className='w-64 h-64 flex flex-col'>
@@ -39,7 +47,8 @@ const Home: NextPage = () => {
         /><div className='text-xl text-center capitalize mt-[-2rem]'>
         {secondPokemon.data?.name}
         
-        </div></div>
+        </div>
+        <button onClick={() => voteForRoundest(second)}>Rounder</button></div>
       
       </div>
     </div>

@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 body {
-    @apply text-white bg-gray-800;
+  @apply text-white bg-gray-800;
+}
+
+button {
+  @apply bg-gray-700 rounded-md hover:bg-sky-700;
 }
